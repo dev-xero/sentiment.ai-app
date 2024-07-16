@@ -11,15 +11,23 @@ package bitshift.studios.sentimentai.presentation.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,13 +35,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bitshift.studios.sentimentai.R
+import bitshift.studios.sentimentai.presentation.components.InputField
+import bitshift.studios.sentimentai.presentation.theme.onPrimaryContainerLight
 import bitshift.studios.sentimentai.presentation.theme.primaryDark
+import bitshift.studios.sentimentai.presentation.theme.secondaryDark
+import bitshift.studios.sentimentai.presentation.theme.secondaryLight
 import bitshift.studios.sentimentai.presentation.theme.surfaceLight
 
 // Home screen composable
@@ -41,6 +55,7 @@ import bitshift.studios.sentimentai.presentation.theme.surfaceLight
 fun HomeScreen(modifier: Modifier = Modifier) {
 	// STATE
 	val isDarkTheme = isSystemInDarkTheme()
+	val focusManager = LocalFocusManager.current
 
 	// UI
 	Scaffold(
@@ -51,8 +66,70 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 			modifier = modifier
 				.fillMaxWidth()
 				.padding(paddingValues)
+				.padding(horizontal = 12.dp)
 		) {
-			// CONTENT
+			// Intro section
+			item {
+				Text(
+					text = stringResource(id = R.string.home_intro),
+					style = MaterialTheme.typography.bodyMedium,
+					color = if (isDarkTheme) secondaryDark else secondaryLight
+				)
+
+				Spacer(modifier = Modifier.height(24.dp))
+			}
+			
+			// Input fields
+			item {
+				// Product Field
+				InputField(
+					placeholder = stringResource(id = R.string.product),
+					isDarkTheme = isDarkTheme,
+					focusManager = focusManager
+				)
+					
+				Spacer(modifier = Modifier.height(16.dp))
+				
+				// Review Field
+				InputField(
+					placeholder = stringResource(id = R.string.your_review),
+					isDarkTheme = isDarkTheme,
+					isTextArea = true,
+					focusManager = focusManager
+				)
+
+				Spacer(modifier = Modifier.height(24.dp))
+			}
+			
+			// Analysis Button
+			item {
+				Button(
+					onClick = { /*TODO*/ },
+					modifier = Modifier.fillMaxWidth(),
+					contentPadding = PaddingValues(12.dp),
+					shape = RoundedCornerShape(16.dp),
+					colors = ButtonDefaults.buttonColors(
+						containerColor = Color(0xFFF97A32),
+						contentColor = onPrimaryContainerLight
+					)
+				) {
+					Row(
+						verticalAlignment = Alignment.CenterVertically,
+						horizontalArrangement = Arrangement.Center
+					) {
+						Icon(
+							painter = painterResource(id = R.drawable.icon_target),
+							contentDescription = null
+						)
+						Spacer(modifier = Modifier.width(4.dp))
+						Text(
+							text = stringResource(id = R.string.button_analyze).uppercase(),
+							fontWeight = FontWeight.Black,
+							style = MaterialTheme.typography.bodyLarge
+						)
+					}
+				}
+			}
 		}
 	}
 }

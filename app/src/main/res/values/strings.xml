@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">SentimentAI</string>
     <string name="sentiment">Sentiment</string>
+    <string name="home_intro">
+        This app runs on an ML model trained using TensorFlow to analyze product review sentiments.
+    </string>
+    <string name="product">Product</string>
+    <string name="your_review">Your Review</string>
+    <string name="button_analyze">Analyze!</string>
 </resources>
