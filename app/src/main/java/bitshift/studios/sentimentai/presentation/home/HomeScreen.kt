@@ -26,8 +26,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,13 +33,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import bitshift.studios.sentimentai.R
 import bitshift.studios.sentimentai.presentation.components.InputField
 import bitshift.studios.sentimentai.presentation.theme.onPrimaryContainerLight
@@ -54,6 +52,7 @@ import bitshift.studios.sentimentai.presentation.theme.surfaceLight
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
 	// STATE
+	val viewModel = HomeViewModel()
 	val isDarkTheme = isSystemInDarkTheme()
 	val focusManager = LocalFocusManager.current
 
@@ -85,7 +84,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 				InputField(
 					placeholder = stringResource(id = R.string.product),
 					isDarkTheme = isDarkTheme,
-					focusManager = focusManager
+					focusManager = focusManager,
+					text = viewModel.productName.value,
+					onChange = { viewModel.updateProductName(it) }
 				)
 					
 				Spacer(modifier = Modifier.height(16.dp))
@@ -95,7 +96,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 					placeholder = stringResource(id = R.string.your_review),
 					isDarkTheme = isDarkTheme,
 					isTextArea = true,
-					focusManager = focusManager
+					focusManager = focusManager,
+					text = viewModel.productReview.value,
+					onChange = { viewModel.updateProductReview(it) }
 				)
 
 				Spacer(modifier = Modifier.height(24.dp))
@@ -104,7 +107,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 			// Analysis Button
 			item {
 				Button(
-					onClick = { /*TODO*/ },
+					onClick = { viewModel.analyzeSentiment() },
 					modifier = Modifier.fillMaxWidth(),
 					contentPadding = PaddingValues(12.dp),
 					shape = RoundedCornerShape(16.dp),

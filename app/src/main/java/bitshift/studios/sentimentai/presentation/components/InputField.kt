@@ -35,13 +35,10 @@ fun InputField(
 	isTextArea: Boolean = false,
 	placeholder: String,
 	isDarkTheme: Boolean,
-	focusManager: FocusManager
+	focusManager: FocusManager,
+	text: String,
+	onChange: (value: String) -> Unit,
 ) {
-	// State
-
-	// FAKE STATE: CHANGE LATER
-	var text by remember { mutableStateOf("") }
-
 	// UI
 	OutlinedTextField(
 		modifier = modifier
@@ -51,7 +48,7 @@ fun InputField(
 			})
 		,
 		value = text,
-		onValueChange = { newText -> text = newText },
+		onValueChange = { onChange(it) },
 		placeholder = { Text(text = placeholder) },
 		singleLine = !isTextArea,
 		maxLines = if (isTextArea) 24 else 1,
