@@ -69,4 +69,6 @@ dependencies {
 
 	// SPLASH API
 	implementation(libs.androidx.core.splashscreen)
+	// Google Fonts API
+	implementation(libs.androidx.ui.text.google.fonts)
 }
