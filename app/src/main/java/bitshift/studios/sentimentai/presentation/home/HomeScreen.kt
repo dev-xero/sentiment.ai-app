@@ -23,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,9 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bitshift.studios.sentimentai.R
-import bitshift.studios.sentimentai.presentation.theme.primaryContainerLight
 import bitshift.studios.sentimentai.presentation.theme.primaryDark
-import bitshift.studios.sentimentai.presentation.theme.surfaceDark
 import bitshift.studios.sentimentai.presentation.theme.surfaceLight
 
 // Home screen composable
@@ -88,7 +85,7 @@ private fun HomeAppBar(
 						style = MaterialTheme.typography.headlineMedium
 					)
 					Text(
-						text = ".AI",
+						text = ".ai",
 						color = if (isDarkTheme) Color(0xFFE6BEAC) else Color(0xFFF97A32),
 						fontWeight = FontWeight.Bold,
 						style = MaterialTheme.typography.headlineMedium
