@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SentimentAI</string>
+    <string name="sentiment">Sentiment</string>
 </resources>

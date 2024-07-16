@@ -1,3 +1,11 @@
+/*
+	* GNU GENERAL PUBLIC LICENSE
+	* Copyright 2024 - DEV XERO
+
+	* Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+	* Everyone is permitted to copy and distribute verbatim copies
+	* of this license document, but changing it is not allowed.
+*/
 package bitshift.studios.sentimentai
 
 import android.os.Bundle
@@ -12,39 +20,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import bitshift.studios.sentimentai.presentation.home.HomeScreen
 import bitshift.studios.sentimentai.presentation.theme.SentimentAITheme
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		installSplashScreen()
-
 		super.onCreate(savedInstanceState)
 		enableEdgeToEdge()
 		setContent {
 			SentimentAITheme {
-				Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-					Greeting(
-						name = "Sentiment.ai",
-						modifier = Modifier.padding(innerPadding)
-					)
-				}
+				HomeScreen()
 			}
 		}
-	}
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-	Text(
-		text = "Hello $name!",
-		modifier = modifier
-	)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-	SentimentAITheme {
-		Greeting("Android")
 	}
 }
