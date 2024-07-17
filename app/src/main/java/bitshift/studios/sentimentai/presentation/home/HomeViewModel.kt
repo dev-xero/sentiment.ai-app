@@ -12,9 +12,12 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 // Home screen View Model
-class HomeViewModel: ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(): ViewModel() {
 	private val _productName = mutableStateOf("")
 	private val _productReview = mutableStateOf("")
 	val productName: State<String> get() = _productName

@@ -1,6 +1,8 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
+	alias(libs.plugins.dev.tools)
+	alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -40,7 +42,7 @@ android {
 		compose = true
 	}
 	composeOptions {
-		kotlinCompilerExtensionVersion = "1.5.1"
+		kotlinCompilerExtensionVersion = "1.5.2"
 	}
 	packaging {
 		resources {
@@ -71,4 +73,15 @@ dependencies {
 	implementation(libs.androidx.core.splashscreen)
 	// Google Fonts API
 	implementation(libs.androidx.ui.text.google.fonts)
+
+	// RetroFit
+	implementation(libs.retrofit)
+	implementation(libs.converter.gson)
+	implementation(libs.okhttp)
+	implementation(libs.logging.interceptor)
+	implementation(libs.moshi.kotlin)
+
+	// Dagger Hilt
+	implementation(libs.hilt.android)
+	ksp(libs.hilt.compiler)
 }

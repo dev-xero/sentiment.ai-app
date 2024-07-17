@@ -69,18 +69,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 		) {
 			// Intro section
 			item {
-				Text(
-					text = stringResource(id = R.string.home_intro),
-					style = MaterialTheme.typography.bodyMedium,
-					color = if (isDarkTheme) secondaryDark else secondaryLight
-				)
 
-				Spacer(modifier = Modifier.height(24.dp))
-			}
-			
-			// Input fields
-			item {
-				// Product Field
 				InputField(
 					placeholder = stringResource(id = R.string.product),
 					isDarkTheme = isDarkTheme,
@@ -107,7 +96,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 			// Analysis Button
 			item {
 				Button(
-					onClick = { viewModel.analyzeSentiment() },
+					onClick = {
+						focusManager.clearFocus()
+						viewModel.analyzeSentiment()
+					},
 					modifier = Modifier.fillMaxWidth(),
 					contentPadding = PaddingValues(12.dp),
 					shape = RoundedCornerShape(16.dp),
