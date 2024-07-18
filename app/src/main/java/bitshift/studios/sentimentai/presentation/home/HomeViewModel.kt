@@ -16,10 +16,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bitshift.studios.sentimentai.domain.model.Sentiment
 import bitshift.studios.sentimentai.domain.network.SentimentRequest
+import bitshift.studios.sentimentai.domain.network.SentimentUIState
 import bitshift.studios.sentimentai.domain.repository.SentimentRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val TAG = "HOME"
 
 // Home screen View Model
 @HiltViewModel
@@ -29,11 +34,12 @@ class HomeViewModel @Inject constructor(
 	private val _productName = mutableStateOf("")
 	private val _productReview = mutableStateOf("")
 	private val _isEnabled = mutableStateOf(true)
-	private val _sentiment: MutableState<Sentiment>? = null
+	private val _sentimentUIState = MutableStateFlow<SentimentUIState>(SentimentUIState.Loading)
+
 	val productName: State<String> get() = _productName
 	val productReview: State<String> get() = _productReview
-	val sentiment: MutableState<Sentiment>? get() = _sentiment
 	val isEnabled: State<Boolean> get() = _isEnabled
+	val sentimentUIState: StateFlow<SentimentUIState> get() = _sentimentUIState
 
 	// Update product name
 	fun updateProductName(newName: String) {
@@ -47,15 +53,26 @@ class HomeViewModel @Inject constructor(
 
 	// Analyze Sentiment
 	fun analyzeSentiment() {
-		Log.d("HOME", "product: ${productName.value}\nreview: ${productReview.value}")
-		val reviewReq = SentimentRequest(review = _productReview.value)
-		_isEnabled.value = false
-		viewModelScope.launch {
-			val res = sentimentRepo.analyzeSentiment(reviewReq)
-			_sentiment?.value = res
-			_isEnabled.value = true
-			Log.d("HOME", res.toString())
+		Log.d(TAG, "product: ${productName.value}\nreview: ${productReview.value}")
 
+		val reviewReq = SentimentRequest(review = _productReview.value)
+		Log.d(TAG, reviewReq.toString())
+		_isEnabled.value = false
+
+		viewModelScope.launch {
+			try {
+				val res = sentimentRepo.analyzeSentiment(reviewReq)
+
+				_sentimentUIState.value = if (res.isSuccessful) {
+					res.body()?.let { SentimentUIState.Success(it) } ?: SentimentUIState.Error("Resource not found.")
+				} else {
+					SentimentUIState.Error("Failed to analyze sentiment.")
+				}
+			} catch (e: Exception) {
+				SentimentUIState.Error("Couldn't reach the API. Try again later.")
+			} finally {
+				_isEnabled.value = true
+			}
 		}
 	}
 }

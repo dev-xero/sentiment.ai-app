@@ -11,6 +11,7 @@ package bitshift.studios.sentimentai.domain.repository
 import bitshift.studios.sentimentai.domain.model.Sentiment
 import bitshift.studios.sentimentai.domain.network.SentimentRequest
 import bitshift.studios.sentimentai.domain.network.SentimentAPI
+import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -19,7 +20,7 @@ class SentimentRepo @Inject constructor(
 	private val sentimentAPI: SentimentAPI
 ) {
 	// Make sentiment analysis requests
-	suspend fun analyzeSentiment(req: SentimentRequest): Sentiment {
-		return sentimentAPI.analyze(req.review)
+	suspend fun analyzeSentiment(req: SentimentRequest): Response<Sentiment> {
+		return sentimentAPI.analyze(req)
 	}
 }

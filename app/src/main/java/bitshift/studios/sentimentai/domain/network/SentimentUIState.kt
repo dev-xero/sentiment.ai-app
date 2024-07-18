@@ -9,12 +9,10 @@
 package bitshift.studios.sentimentai.domain.network
 
 import bitshift.studios.sentimentai.domain.model.Sentiment
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.POST
 
-// Sentiment API Interface
-interface SentimentAPI {
-	@POST(Constants.ENDPOINT)
-	suspend fun analyze(@Body review: SentimentRequest): Response<Sentiment>
+// Sentiment UI State
+sealed class SentimentUIState {
+	data object Loading: SentimentUIState()
+	data class Success(val res: Sentiment): SentimentUIState()
+	data class Error(val headline: String): SentimentUIState()
 }
