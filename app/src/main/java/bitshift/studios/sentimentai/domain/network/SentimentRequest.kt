@@ -8,12 +8,6 @@
 */
 package bitshift.studios.sentimentai.domain.network
 
-import bitshift.studios.sentimentai.domain.model.Sentiment
-import retrofit2.http.Body
-import retrofit2.http.POST
-
-// Sentiment API Interface
-interface SentimentAPI {
-	@POST(Constants.ENDPOINT)
-	suspend fun analyze(@Body review: String): Sentiment
-}
+data class SentimentRequest(
+	val review: String
+)

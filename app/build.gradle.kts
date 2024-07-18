@@ -71,6 +71,7 @@ dependencies {
 
 	// SPLASH API
 	implementation(libs.androidx.core.splashscreen)
+
 	// Google Fonts API
 	implementation(libs.androidx.ui.text.google.fonts)
 
@@ -79,7 +80,11 @@ dependencies {
 	implementation(libs.converter.gson)
 	implementation(libs.okhttp)
 	implementation(libs.logging.interceptor)
+
+	// Moshi
 	implementation(libs.moshi.kotlin)
+	implementation(libs.converter.moshi)
+	ksp(libs.moshi.kotlin.codegen)
 
 	// Dagger Hilt
 	implementation(libs.hilt.android)
