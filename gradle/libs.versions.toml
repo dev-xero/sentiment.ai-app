@@ -15,7 +15,7 @@ activityCompose = "1.9.0"
 composeBom = "2023.08.00"
 loggingInterceptor = "4.9.0"
 moshiKotlin = "1.15.0"
-moshiKotlinCodegen = "1.5.10"
+moshiKotlinCodegen = "1.15.0"
 okhttp = "4.9.0"
 retrofit = "2.9.0"
 uiTextGoogleFonts = "1.6.8"
@@ -23,6 +23,8 @@ uiTextGoogleFonts = "1.6.8"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
