@@ -28,9 +28,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -40,17 +47,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import bitshift.studios.sentimentai.R
+import bitshift.studios.sentimentai.domain.network.SentimentUIState
 import bitshift.studios.sentimentai.presentation.components.InputField
 import bitshift.studios.sentimentai.presentation.theme.onPrimaryContainerLight
 import bitshift.studios.sentimentai.presentation.theme.primaryDark
-import bitshift.studios.sentimentai.presentation.theme.secondaryDark
-import bitshift.studios.sentimentai.presentation.theme.secondaryLight
 import bitshift.studios.sentimentai.presentation.theme.surfaceLight
+import kotlinx.coroutines.launch
 
-private fun ClickedAnalyze(
+private suspend fun clickedAnalyze(
 	focusManager: FocusManager,
 	viewModel: HomeViewModel
 ) {
@@ -63,12 +69,25 @@ private fun ClickedAnalyze(
 fun HomeScreen(modifier: Modifier = Modifier) {
 	// STATE
 	val homeViewModel = viewModel(modelClass = HomeViewModel::class.java)
+	val sentimentUIState = homeViewModel.sentimentUIState.collectAsState()
 	val isDarkTheme = isSystemInDarkTheme()
 	val focusManager = LocalFocusManager.current
+	val snackbarHostState = remember { SnackbarHostState() }
+	val snackbarMessage = homeViewModel.snackbarMessage.value
+	val scope = rememberCoroutineScope()
+
+	// Show Snackbar when there's a message
+	LaunchedEffect(snackbarMessage) {
+		snackbarMessage?.let {
+			snackbarHostState.showSnackbar(it)
+			homeViewModel.clearSnackbarMessage()
+		}
+	}
 
 	// UI
 	Scaffold(
 		topBar = { HomeAppBar(isDarkTheme = isDarkTheme) },
+		snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
 		containerColor = if (isDarkTheme) Color(0xFF140C09) else surfaceLight
 	) { paddingValues ->
 		LazyColumn(
@@ -107,7 +126,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 			item {
 				Button(
 					onClick = {
-						ClickedAnalyze(focusManager, homeViewModel)
+						scope.launch {
+							clickedAnalyze(
+								focusManager = focusManager,
+								viewModel = homeViewModel
+							)
+						}
 					},
 					modifier = Modifier.fillMaxWidth(),
 					contentPadding = PaddingValues(12.dp),

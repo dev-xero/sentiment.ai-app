@@ -9,12 +9,10 @@
 package bitshift.studios.sentimentai.presentation.home
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import bitshift.studios.sentimentai.domain.model.Sentiment
 import bitshift.studios.sentimentai.domain.network.SentimentRequest
 import bitshift.studios.sentimentai.domain.network.SentimentUIState
 import bitshift.studios.sentimentai.domain.repository.SentimentRepo
@@ -35,11 +33,13 @@ class HomeViewModel @Inject constructor(
 	private val _productReview = mutableStateOf("")
 	private val _isEnabled = mutableStateOf(true)
 	private val _sentimentUIState = MutableStateFlow<SentimentUIState>(SentimentUIState.Loading)
+	private val _snackbarMessage = mutableStateOf<String?>(null)
 
 	val productName: State<String> get() = _productName
 	val productReview: State<String> get() = _productReview
 	val isEnabled: State<Boolean> get() = _isEnabled
 	val sentimentUIState: StateFlow<SentimentUIState> get() = _sentimentUIState
+	val snackbarMessage: State<String?> = _snackbarMessage
 
 	// Update product name
 	fun updateProductName(newName: String) {
@@ -53,11 +53,14 @@ class HomeViewModel @Inject constructor(
 
 	// Analyze Sentiment
 	fun analyzeSentiment() {
-		Log.d(TAG, "product: ${productName.value}\nreview: ${productReview.value}")
+		if (_productName.value.isEmpty() || _productReview.value.isEmpty()) {
+			_snackbarMessage.value = "Provide both a product name and review."
+			return
+		}
 
 		val reviewReq = SentimentRequest(review = _productReview.value)
-		Log.d(TAG, reviewReq.toString())
 		_isEnabled.value = false
+		Log.d(TAG, reviewReq.toString())
 
 		viewModelScope.launch {
 			try {
@@ -68,11 +71,25 @@ class HomeViewModel @Inject constructor(
 				} else {
 					SentimentUIState.Error("Failed to analyze sentiment.")
 				}
+
+				if (_sentimentUIState.value is SentimentUIState.Error) {
+					_snackbarMessage.value = (_sentimentUIState.value as SentimentUIState.Error).headline
+				}
+
+				Log.d(TAG, _sentimentUIState.value.toString())
 			} catch (e: Exception) {
-				SentimentUIState.Error("Couldn't reach the API. Try again later.")
+				val msg = "Couldn't reach the API. Try again later."
+				SentimentUIState.Error(msg)
+				_snackbarMessage.value = msg
+				Log.e(TAG, "Exception occurred during sentiment analysis", e)
 			} finally {
 				_isEnabled.value = true
 			}
 		}
+	}
+
+	// Clear snackbar value
+	fun clearSnackbarMessage() {
+		_snackbarMessage.value = null
 	}
 }
